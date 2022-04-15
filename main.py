@@ -1,30 +1,51 @@
-from turtle import color
+#from turtle import color
 import matplotlib.pyplot as plt
 import numpy as np
-import itertools
+#import itertools
+from datetime import date
+import csv
 
 def main():
     print("main func")
-    # x = np.linspace(0, 20, 100)  # Create a list of evenly-spaced numbers over the range
-    # plt.plot(x, np.sin(x))       # Plot the sine of each x point
-    # plt.show() 
 
-    #Step 1?
+    ##functions appended with testfunc are experimental functions exploring tests, not for final use
+    plot_hardcoded_data_testfunc()
+    read_from_csv_testfunc()
+    timedelta_testfunc()
+
+def plot_hardcoded_data_testfunc():
+    print("This is the plotting testfunc")
     ##Full values (of winding road, B23 in this instance)
     y_values = [12.839,11.629,10.375,10.35,10.325,10.312,10.29,10.25,10.233,10.209,10.203,10.202,10.186,10.155,10.149,10.124,10.093,9.915,9.880,9.875,9.778,9.749,9.678,9.657]
     x_values = ["2004-08-04","2005-08-30","2006-02-26","2006-02-26","2006-06-XX","2006-08-25","2007-10-24","2007-10-25","2007-10-25","2007-10-25","2009-01-18","2009-01-18","2009-01-18","2011-08-20","2013-11-15","2014-08-06","2014-08-12","2019-03-06","2020-04-13","2020-04-15","2020-04-16","2020-04-25","2020-04-25","2021-08-25"]
-
-    #Plotting scatter, showing graph (vs. saving graph)
+    #might be better to convert dates into discrete values, i.e. days since the first wr
+    #Plotting scatter, showing graph
     #TODO: Work out how to do itertools to cycle through colours
     plt.scatter(x_values,y_values, color="r")
     #Editing graph visual data
     plt.xticks(rotation=75) #Change label rotation, to make it properly visible
-
     #Labels+Title
     plt.xlabel("Date (YYYY-MM-DD")
     plt.ylabel("Time")
     plt.title("Winding Road IL Record History")
+    #Showing and saving for testing purposes
+    plt.savefig('tempgraph.png')
     plt.show()
+
+def timedelta_testfunc():
+    print("This is the timedelta testfunc")
+    #TODO: Do find out how to calculate time delta
+    #https://stackoverflow.com/questions/151199/how-to-calculate-number-of-days-between-two-given-dates
+
+def read_from_csv_testfunc():
+    print("this is reading from csv file testfunc")
+    with open('test.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            #print(row['Column1'], row['Column2'], row['Column3'])
+            row1, row2, row3 = row['Column1'], row['Column2'], row['Column3']
+            print(row1, row2, row3) #Damn can't believe this actually works!!
+
 
 print("not in main func")
 
