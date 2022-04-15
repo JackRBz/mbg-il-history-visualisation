@@ -9,8 +9,8 @@ def main():
     print("main func")
 
     ##functions appended with testfunc are experimental functions exploring tests, not for final use
-    plot_hardcoded_data_testfunc()
-    read_from_csv_testfunc()
+    #plot_hardcoded_data_testfunc()
+    #read_from_csv_testfunc()
     timedelta_testfunc()
 
 def plot_hardcoded_data_testfunc():
@@ -36,6 +36,21 @@ def timedelta_testfunc():
     print("This is the timedelta testfunc")
     #TODO: Do find out how to calculate time delta
     #https://stackoverflow.com/questions/151199/how-to-calculate-number-of-days-between-two-given-dates
+    #Procedure: If day is missing, should I edit the csv or edit on the fly? And what day, default to 01?
+    date_values_full_list = ["2004-08-04","2005-08-30","2006-02-26","2006-02-26","2006-06-XX","2006-08-25","2007-10-24","2007-10-25","2007-10-25","2007-10-25","2009-01-18","2009-01-18","2009-01-18","2011-08-20","2013-11-15","2014-08-06","2014-08-12","2019-03-06","2020-04-13","2020-04-15","2020-04-16","2020-04-25","2020-04-25","2021-08-25"]
+    d1 = date_values_full_list[0]
+    print(d1)
+    d2 = date_values_full_list[1]
+    print(d2)
+    ##Need to convert string dates into split numbers? cannot use int func, use string slices to extract YYYY-MM-DD separately?
+    # print(d1[:4]) #The year
+    # print(d1[5:7]) #The month
+    # print(d1[-2:]) #The day
+    d1_year, d1_month, d1_day = d1[:4], d1[5:7], d1[-2:]
+    d2_year, d2_month, d2_day = d2[:4], d2[5:7], d2[-2:]
+
+
+
 
 def read_from_csv_testfunc():
     print("this is reading from csv file testfunc")
