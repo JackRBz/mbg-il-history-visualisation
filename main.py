@@ -11,7 +11,8 @@ def main():
     ##functions appended with testfunc are experimental functions exploring tests, not for final use
     #plot_hardcoded_data_testfunc()
     #read_from_csv_testfunc()
-    timedelta_testfunc()
+    #timedelta_testfunc()
+    timedelta_loop_testfunc()
 
 def plot_hardcoded_data_testfunc():
     print("This is the plotting testfunc")
@@ -42,12 +43,73 @@ def timedelta_testfunc():
     print(d1)
     d2 = date_values_full_list[1]
     print(d2)
+    d3 = date_values_full_list[2]
     ##Need to convert string dates into split numbers? cannot use int func, use string slices to extract YYYY-MM-DD separately?
-    # print(d1[:4]) #The year
-    # print(d1[5:7]) #The month
-    # print(d1[-2:]) #The day
-    d1_year, d1_month, d1_day = d1[:4], d1[5:7], d1[-2:]
-    d2_year, d2_month, d2_day = d2[:4], d2[5:7], d2[-2:]
+
+    #We also need a culmulative days counter, starting from 0
+    days_culmulative_sum = 0
+
+    d1_year, d1_month, d1_day = int(d1[:4]), int(d1[5:7]), int(d1[-2:])
+    d2_year, d2_month, d2_day = int(d2[:4]), int(d2[5:7]), int(d2[-2:])
+    d3_year, d3_month, d3_day = int(d3[:4]), int(d3[5:7]), int(d3[-2:])
+    d1_date = date(d1_year, d1_month, d1_day)
+    d2_date = date(d2_year, d2_month, d2_day)
+    d3_date = date(d3_year, d3_month, d3_day)
+    #calculate the delta, in days, between dates
+    delta_d2d1 = d2_date - d1_date # later date first, avoid negatives
+    delta_d2d1_int = int(delta_d2d1.days) #convert datetime.timedelta into an int, needed for plotting
+    days_culmulative_sum += delta_d2d1_int
+    print(days_culmulative_sum)
+    #repeat process manually for d3-d2, but with culmulative sum
+    delta_d3d2 = d3_date - d2_date
+    delta_d3d2_int = int(delta_d3d2.days)
+    delta_d3d2_int_culm = delta_d3d2_int + delta_d2d1_int
+    days_culmulative_sum += delta_d3d2_int
+    print(days_culmulative_sum)
+
+    x_values_short = [12.839,11.629,10.375]
+    y_values_short = [0, delta_d2d1_int, delta_d3d2_int_culm]
+    plt.plot(y_values_short, x_values_short)
+    plt.xlabel("Days since 2004-08-04 (Michael McFadden's Gold Time Guide Release Date)")
+    plt.ylabel("Time")
+    plt.savefig('tempgraph_timedelta.png')
+    plt.show()
+
+def timedelta_loop_testfunc():
+    print("This is 2nd timedelta testfunc, experimenting with looping through larger data sample")
+    #Question, how will this work when the delta is zero? hmmmm
+    #I also need to make include a 'culmulative delta' variable like above
+    #Use len as the looping parameter
+    #Note we need 2 dates to calculate each delta, n-1 and n, or n and n+1
+
+    # Replacing XX with an actual date, temp replacing it with 01
+    raw_dates_needs_processing = ["2004-08-04","2005-08-30","2006-02-26","2006-02-26","2006-06-XX","2006-08-25","2007-10-24","2007-10-25","2007-10-25","2007-10-25","2009-01-18","2009-01-18","2009-01-18","2011-08-20","2013-11-15","2014-08-06","2014-08-12","2019-03-06","2020-04-13","2020-04-15","2020-04-16","2020-04-25","2020-04-25","2021-08-25"]
+    raw_dates = ["2004-08-04","2005-08-30","2006-02-26","2006-02-26","2006-06-01","2006-08-25","2007-10-24","2007-10-25","2007-10-25","2007-10-25","2009-01-18","2009-01-18","2009-01-18","2011-08-20","2013-11-15","2014-08-06","2014-08-12","2019-03-06","2020-04-13","2020-04-15","2020-04-16","2020-04-25","2020-04-25","2021-08-25"]
+
+    x_values = [0]
+    y_values = [12.839,11.629,10.375,10.35,10.325,10.312,10.29,10.25,10.233,10.209,10.203,10.202,10.186,10.155,10.149,10.124,10.093,9.915,9.880,9.875,9.778,9.749,9.678,9.657]
+    days_culm = 0
+
+    for index in range(len(raw_dates) - 1):
+        print(raw_dates[index])
+        d0_year, d0_month, d0_day = int(raw_dates[index][:4]), int(raw_dates[index][5:7]), int(raw_dates[index][-2:])
+        d1_year, d1_month, d1_day = int(raw_dates[index+1][:4]), int(raw_dates[index+1][5:7]), int(raw_dates[index+1][-2:])
+        d0_date = date(d0_year, d0_month, d0_day)
+        d1_date = date(d1_year, d1_month, d1_day)
+        delta = d1_date - d0_date
+
+        delta_temp = int(delta.days)
+        delta_culm = days_culm + delta_temp
+        x_values.append(delta_culm)
+
+        days_culm += delta_temp
+    plt.plot(x_values, y_values)
+    plt.xlabel("Days since 2004-08-04")
+    plt.ylabel("Time")
+    plt.savefig("tempgraph_timedelta_loop.png")
+    plt.show()
+
+    
 
 
 
