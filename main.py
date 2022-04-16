@@ -12,7 +12,8 @@ def main():
     #plot_hardcoded_data_testfunc()
     #read_from_csv_testfunc()
     #timedelta_testfunc()
-    timedelta_loop_testfunc()
+    #timedelta_loop_testfunc()
+    read_from_multiple_csvs_testfunc()
 
 def plot_hardcoded_data_testfunc():
     print("This is the plotting testfunc")
@@ -108,12 +109,7 @@ def timedelta_loop_testfunc():
     plt.ylabel("Time")
     plt.savefig("tempgraph_timedelta_loop.png")
     plt.show()
-
-    
-
-
-
-
+   
 def read_from_csv_testfunc():
     print("this is reading from csv file testfunc")
     with open('test.csv', newline='') as csvfile:
@@ -122,6 +118,24 @@ def read_from_csv_testfunc():
             #print(row['Column1'], row['Column2'], row['Column3'])
             row1, row2, row3 = row['Column1'], row['Column2'], row['Column3']
             print(row1, row2, row3) #Damn can't believe this actually works!!
+
+def read_from_multiple_csvs_testfunc():
+    print("multiple csv's? testfunc")
+    #hardcoding this for now, not great but it makes this easier
+    for num in range(1,4): #range function is (inclusive, exclusive)
+        with open(f"csvs/{num}.csv", newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            runner, time, date = [], [], []
+            for row in reader:
+                runner.append(row['Runner'])
+                time.append(row['Time'])
+                date.append(row['Date'])
+                #runner, time, date = row['Runner'], row['Time'], row['Date']
+                #print(runner, time, date)
+            
+            print(runner)
+            print(time)
+            print(date)
 
 
 print("not in main func")
