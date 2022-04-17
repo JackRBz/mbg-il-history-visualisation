@@ -5,6 +5,8 @@ import numpy as np
 from datetime import date
 import csv
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.pipeline import make_pipeline
 
 def main():
     print("main func")
@@ -151,21 +153,44 @@ def matplotlib_styling_testfunc():
     x_values = np.array([0, 391, 571, 571, 666, 751, 1176, 1177, 1177, 1177, 1628, 1628, 1628, 2572, 3390, 3654, 3660, 5327, 5731, 5733, 5734, 5743, 5743, 6230])
     y_values = np.array([12.839,11.629,10.375,10.35,10.325,10.312,10.29,10.25,10.233,10.209,10.203,10.202,10.186,10.155,10.149,10.124,10.093,9.915,9.880,9.875,9.778,9.749,9.678,9.657])
 
-    #line of best fit? not curve!
+    #line of best fit? not curve! y = ax + b
     #I also think polyfit is deprecated but uh /shrug
+    """ #Commenting this out because I'm testing higher polynomial curves
     a, b = np.polyfit(x_values, y_values, 1)
     print(a, b)
     plt.scatter(x_values, y_values, color='green')
-    #plt.plot(x_values, y_values)
-    plt.plot(x_values, a*x_values+b, color='steelblue', linestyle='--', linewidth=2)
+    plt.plot(x_values, y_values)
+    y_line_fit = a*x_values+b #put line in variable
+    plt.plot(x_values, y_line_fit, color='steelblue', linestyle='--', linewidth=2)
     #Displaying the text of the line of best fit is a massive faff ngl
     plt.text(x_values[len(x_values) - (len(x_values)//2)], y_values[0], 'y = ' + '{:.2f}'.format(b) + ' + {:.2f}'.format(a) + 'x', size=10)
     plt.savefig("matplotlib_styling_tests_scatter_linebestfit.png")
+    plt.show()
+    """
+
+    #Let's try a curve of best fit? 2nd poly => y = ax^2 + bx + c
+    a, b, c = np.polyfit(x_values, y_values, 2)
+    print(a, b, c)
+    plt.scatter(x_values, y_values, color='green')
+    y_curve_fit = a*pow(x_values, 2) + b*x_values + c
+    plt.plot(x_values, y_curve_fit, color='red', linestyle='--', linewidth=2)
+    plt.savefig("matplotlib_styling_tests_scatter_curvebestfit.png")
     #plt.show()
 
-    #Let's try a curve of best fit?
-    test = np.polyfit(x_values, y_values, 2)
-    print(test)
+    #Curve, 3rd poly: y = ax^3 + bx^2 + cx + d
+    #Odd polynomials are probably not very good, for monotonically decreasing curvefitting
+    a, b, c, d = np.polyfit(x_values, y_values, 3)
+    print(a, b, c, d)
+    plt.scatter(x_values, y_values, color='green')
+    y_curve3_fit = a*pow(x_values, 3) + b*pow(x_values, 2) + c*x_values + d
+    plt.plot(x_values, y_curve3_fit, color='red', linestyle='--', linewidth=2)
+    plt.savefig("matplotlib_styling_tests_scatter_curve3bestfit.png")
+    #plt.show()
+
+    #4th degree polynomial gives leads to too-large numbers for the days e.g. 6000^4 = 1.296x10^15!!
+    #Reversing x/y values would maybe work, although may run into floating point issues?
+    #e.g. 11.629^4 = 18288.137658116881.... which is far smaller but has large remainder
+
 
     #Linear regression using sklearn? worth exploring
     x_values_lr = x_values.reshape(-1, 1)
@@ -175,23 +200,25 @@ def matplotlib_styling_testfunc():
     model.fit(x_values_lr, y_values)
 
     #I can use model.predict for x values to predict y values i.e. days in future to predict a time value
-    print(model.predict([[7000]])) #7000 days after 2004/08/04 is 2023/10/04, prediction of 9.458
+    #print(model.predict([[7000]])) #7000 days after 2004/08/04 is 2023/10/04, prediction of 9.458
 
 
     #Potential TODO: Explore the reverse? have a time and predict when that may be achieved given past achievements? hmm
     sklearn_best_fit = model.predict(x_values_lr)
-    print(f'The parameters of the line: {model.coef_}')
+    #print(f'The parameters of the line: {model.coef_}')
 
     #All potential methods for this model: fit, get_params, predict, score, set_params
-    print(model.get_params()) #prints params or the gradient: -0.00019086
-    print(model.score(x_values_lr, y_values)) #returns R^2 score: 0.391417 (not a great model, not surprised a linear model is poor for this)
+    #print(model.get_params()) #prints params or the gradient: -0.00019086
+    #print(model.score(x_values_lr, y_values)) #returns R^2 score: 0.391417 (not a great model, not surprised a linear model is poor for this)
 
     plt.scatter(x_values, y_values)
     plt.plot(x_values, sklearn_best_fit)
     plt.savefig("matplotlib_styling_tests_sklearn_ln.png")
-    plt.show()
+    #plt.show()
 
     #TODO: does sklearn allow for higher polynomial stuff?
+    #take a look at https://towardsdatascience.com/polynomial-regression-with-scikit-learn-what-you-should-know-bed9d3296f2 ?
+
     
 
 print("not in main func")
