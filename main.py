@@ -169,6 +169,7 @@ def matplotlib_styling_testfunc():
     """
 
     #Let's try a curve of best fit? 2nd poly => y = ax^2 + bx + c
+    """
     a, b, c = np.polyfit(x_values, y_values, 2)
     print(a, b, c)
     plt.scatter(x_values, y_values, color='green')
@@ -176,16 +177,19 @@ def matplotlib_styling_testfunc():
     plt.plot(x_values, y_curve_fit, color='red', linestyle='--', linewidth=2)
     plt.savefig("matplotlib_styling_tests_scatter_curvebestfit.png")
     #plt.show()
+    """
 
     #Curve, 3rd poly: y = ax^3 + bx^2 + cx + d
     #Odd polynomials are probably not very good, for monotonically decreasing curvefitting
+    """
     a, b, c, d = np.polyfit(x_values, y_values, 3)
     print(a, b, c, d)
     plt.scatter(x_values, y_values, color='green')
     y_curve3_fit = a*pow(x_values, 3) + b*pow(x_values, 2) + c*x_values + d
-    plt.plot(x_values, y_curve3_fit, color='red', linestyle='--', linewidth=2)
+    #plt.plot(x_values, y_curve3_fit, color='red', linestyle='--', linewidth=2)
     plt.savefig("matplotlib_styling_tests_scatter_curve3bestfit.png")
     #plt.show()
+    """
 
     #4th degree polynomial gives leads to too-large numbers for the days e.g. 6000^4 = 1.296x10^15!!
     #Reversing x/y values would maybe work, although may run into floating point issues?
@@ -205,21 +209,124 @@ def matplotlib_styling_testfunc():
 
     #Potential TODO: Explore the reverse? have a time and predict when that may be achieved given past achievements? hmm
     sklearn_best_fit = model.predict(x_values_lr)
-    #print(f'The parameters of the line: {model.coef_}')
+    print(f'The parameters of the line: {model.coef_}')
 
     #All potential methods for this model: fit, get_params, predict, score, set_params
     #print(model.get_params()) #prints params or the gradient: -0.00019086
     #print(model.score(x_values_lr, y_values)) #returns R^2 score: 0.391417 (not a great model, not surprised a linear model is poor for this)
-
-    plt.scatter(x_values, y_values)
+    """
+    plt.scatter(x_values, y_values, color='green')
     plt.plot(x_values, sklearn_best_fit)
     plt.savefig("matplotlib_styling_tests_sklearn_ln.png")
+    plt.show()
+    """
+    #TODO: does sklearn allow for higher polynomial stuff?
+    #or this to be honest https://data36.com/polynomial-regression-python-scikit-learn/
+    #polynomial regression time!
+
+    #This is going to repeated code, up to degree 10, purely for testing purposes pretty much
+    """
+    poly = PolynomialFeatures(degree=2, include_bias=False) #using 2 degree poly using scikit/sk
+    poly_features = poly.fit_transform(x_values_lr)
+    model.fit(poly_features, y_values)
+    y_predict = model.predict(poly_features)
+    print(y_predict)
+    
+    plt.scatter(x_values, y_values, color='green')
+    plt.plot(x_values, y_predict)
+    #plt.savefig("matplotlib_styling_tests_sklearn_poly")
     #plt.show()
 
-    #TODO: does sklearn allow for higher polynomial stuff?
-    #take a look at https://towardsdatascience.com/polynomial-regression-with-scikit-learn-what-you-should-know-bed9d3296f2 ?
+    poly3 = PolynomialFeatures(degree=3, include_bias=False)
+    poly3_features = poly3.fit_transform(x_values_lr)
+    model.fit(poly3_features, y_values)
+    y3_predict = model.predict(poly3_features)
+    print(y3_predict)
 
-    
+    #plt.scatter(x_values, y_values, color='green')
+    #plt.plot(x_values, y3_predict)
+    plt.savefig("matplotlib_styling_tests_sklearn_poly3")
+    #plt.show()
+
+    poly4 = PolynomialFeatures(degree=4, include_bias=False)
+    poly4_features = poly4.fit_transform(x_values_lr)
+    model.fit(poly4_features, y_values)
+    y4_predict = model.predict(poly4_features)
+    print(y4_predict)
+
+    #plt.scatter(x_values, y_values, color='green')
+    #plt.plot(x_values, y4_predict)
+    plt.savefig("matplotlib_styling_tests_sklearn_poly4")
+    #plt.show()
+
+    poly5 = PolynomialFeatures(degree=5, include_bias=False)
+    poly5_features = poly5.fit_transform(x_values_lr)
+    model.fit(poly5_features, y_values)
+    y5_predict = model.predict(poly5_features)
+    print(y5_predict)
+
+    #plt.scatter(x_values, y_values, color='green')
+    #plt.plot(x_values, y5_predict)
+    plt.savefig("matplotlib_styling_tests_sklearn_poly5")
+    #plt.show()
+
+    poly6 = PolynomialFeatures(degree=6, include_bias=False)
+    poly6_features = poly6.fit_transform(x_values_lr)
+    model.fit(poly6_features, y_values)
+    y6_predict = model.predict(poly6_features)
+    print(y6_predict)
+
+    #plt.scatter(x_values, y_values, color='green')
+    #plt.plot(x_values, y6_predict)
+    plt.savefig("matplotlib_styling_tests_sklearn_poly6")
+    #plt.show()
+
+    poly7 = PolynomialFeatures(degree=7, include_bias=False)
+    poly7_features = poly7.fit_transform(x_values_lr)
+    model.fit(poly7_features, y_values)
+    y7_predict = model.predict(poly7_features)
+    print(y7_predict)
+
+    #plt.scatter(x_values, y_values, color='green')
+    #plt.plot(x_values, y7_predict)
+    plt.savefig("matplotlib_styling_tests_sklearn_poly7")
+    #plt.show()
+
+    poly8 = PolynomialFeatures(degree=8, include_bias=False)
+    poly8_features = poly8.fit_transform(x_values_lr)
+    model.fit(poly8_features, y_values)
+    y8_predict = model.predict(poly8_features)
+    print(y8_predict)
+
+    #plt.scatter(x_values, y_values, color='green')
+    #plt.plot(x_values, y8_predict)
+    plt.savefig("matplotlib_styling_tests_sklearn_poly8")
+    #plt.show()
+
+    poly9 = PolynomialFeatures(degree=9, include_bias=False)
+    poly9_features = poly9.fit_transform(x_values_lr)
+    model.fit(poly9_features, y_values)
+    y9_predict = model.predict(poly9_features)
+    print(y9_predict)
+
+    #plt.scatter(x_values, y_values, color='green')
+    #plt.plot(x_values, y9_predict)
+    plt.savefig("matplotlib_styling_tests_sklearn_poly9")
+    #plt.show()
+
+    poly10 = PolynomialFeatures(degree=10, include_bias=False)
+    poly10_features = poly10.fit_transform(x_values_lr)
+    model.fit(poly10_features, y_values)
+    y10_predict = model.predict(poly10_features)
+    print(y10_predict)
+
+    #plt.scatter(x_values, y_values, color='green')
+    plt.plot(x_values, y10_predict)
+    plt.savefig("matplotlib_styling_tests_sklearn_poly10")
+    plt.show()
+    """
+    #END basic polynomialFeatures stuff
+    #TODO? can I enforce line fit to be monotonically decreasing? if so how?
 
 print("not in main func")
 
