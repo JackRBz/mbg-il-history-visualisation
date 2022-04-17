@@ -7,6 +7,8 @@ import csv
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.pipeline import make_pipeline
+from sklearn.isotonic import IsotonicRegression
+from scipy import interpolate
 
 def main():
     print("main func")
@@ -327,6 +329,21 @@ def matplotlib_styling_testfunc():
     """
     #END basic polynomialFeatures stuff
     #TODO? can I enforce line fit to be monotonically decreasing? if so how?
+    #Have a look at this: Isotonic Regression! https://scikit-learn.org/stable/modules/generated/sklearn.isotonic.IsotonicRegression.html  
+    #Isotonic Regression totally busted
+
+    #Have a look at scipy.optimise? or other
+    """
+    f = interpolate.interp1d(x_values, y_values)
+    third_length = np.floor(len(x_values)/3)
+    step_num = np.floor(x_values[-1]/third_length)
+    x_new = np.arange(0, x_values[-1], step_num)
+    y_new = f(x_new)
+    plt.scatter(x_values, y_values, color='green')
+    plt.plot(x_new, y_new)
+    plt.show()
+    """
+
 
 print("not in main func")
 
