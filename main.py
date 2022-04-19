@@ -40,11 +40,8 @@ from sklearn.pipeline import make_pipeline
 from sklearn.isotonic import IsotonicRegression
 from scipy import interpolate
 
+#configure this at the bottom
 def main(plotfunc):
-    print("its bare here now!!")
-
-    #relative_improvement_testfunc()
-
     #Define needed variables up here for scoping/keeping-track reasons:
     times = []
     rel_improv = []
@@ -56,23 +53,18 @@ def main(plotfunc):
     ]
 
     #CSV reading time
-    #for num in range(1,2): #purely for testing purposes
-    for num in range(1,101): #range func is (inclusive, exclusive)
+    for num in range(1,101): #range func is (inclusive, exclusive), so 1->100 is range(1,101) || Beginner: (1,25), Intermediate (25,49), Advanced (49,100)
         print("---BEGIN CSV TIME FETCHING---")
         with open(f"csvs/{num}.csv", newline='') as csvfile:
             reader = csv.DictReader(csvfile)
-            #date_test = [] #Only for testing purposes, ensure csv is consistent
             for row in reader:
+                #We also have runners and dates stored if wanted/needed
                 times.append(row['Time'])
-                #date_test.append(row['Date']) #Only for testing purposes
 
-            #Convert items in list from strings to floats
-            #Only convert to numpy array when needed!
+            #Convert items in list from strings to floats (only converting to numpy arrays later and then resetting them to plain ol' python lists)
             times = [float(i) for i in times]
 
-        ##END getting times from csv
         print("---END CSV TIME FETCHING----")
-        ##BEGIN creating rel_improv array for graphing
         print("---BEGIN RELATIVE IMPROVEMENT CALCULATION---")
 
         for num1 in range(0, len(times)):
@@ -87,13 +79,13 @@ def main(plotfunc):
         rel_improv = np.array(rel_improv)
         wr_index = np.arange(0, len(rel_improv))
         level_name = level_names[num - 1]
-        if plotfunc != "all":
-            print("plotfunc != all")
+
+        if plotfunc != "all" and plotfunc != "composite":
+            print("plotfunc != all or composite")
             plt.scatter(wr_index, rel_improv)
 
         if plotfunc == "polyfit":
             print("plotfunc == polyfit")
-            #Let's do some lines/curves of best fit yayayay
             #polyfit line of best fit
             a, b = np.polyfit(wr_index, rel_improv, 1)
             y_linefit = a*wr_index + b
@@ -119,26 +111,45 @@ def main(plotfunc):
             plt.ylabel("Relative Improvement")
             plt.title(f"WR History of {level_name}")
             plt.savefig(f"figs/{num}_polyfit.png")
-            #plt.savefig("test.png")
-            #plt.show()
+            plt.clf()
         
-        if plotfunc == "all":
-            print("plotfunc == all")
-            # plt.plot(wr_index, rel_improv, label=level_name)
+        #For plotting multiple lines at once e.g. all plots for a specific difficulty
+        if plotfunc == "composite":
+            print("plotfunc == composite")
             plt.plot(wr_index, rel_improv)
-            #plt.legend(title = "Levels")
             plt.xlabel("WR Index")
             plt.ylabel("Relative Improvement")
-            plt.title(f"WR History of All MBG Levels")
+
+            # Kinda hacky but does work
+            if num == 24:
+                plt.title("WR History of Beginner MBG Levels")
+                plt.savefig("figs/BeginnerILs.png")
+                plt.clf()
+            if num == 48:
+                plt.title("WR History of Intermediate MBG Levels")
+                plt.savefig("figs/IntermediateILs.png")
+                plt.clf()
+            if num == 100:
+                plt.title("WR History of Advanced MBG Levels")
+                plt.savefig("figs/AdvancedILs.png")
+                plt.clf()
+            
+        #Somewhat repetitive, but saves all 100 level plots onto a single graph, verses splitting by difficulty
+        if plotfunc == "all":
+            print("plotfunc == all")
+            plt.plot(wr_index, rel_improv)
+            plt.xlabel("WR Index")
+            plt.ylabel("Relative Improvement")
+            plt.title("WR History of All MBG Levels")
             if num == 100:
                 plt.savefig("figs/All100ILs.png")
 
         
         #reset values
-        #plt.clf()
         times = []
         rel_improv = []
 
+#old testing function, probably deserves to be thrown into the dumping ground!
 def relative_improvement_testfunc():
     print("test")
     times = [3.999,3.89,3.266,3.074,3.069,3.049,2.985,2.984,2.402,2.37,2.333,2.287,2.281,2.267,2.25,2.236,2.226]
@@ -152,6 +163,13 @@ def relative_improvement_testfunc():
     print(len(rel_improv))
     print(rel_improv)
 
+#configure the variables
+"""
+Current options:
+polyfit: Creates scatter graph for each level, adds lines/curves of best fit (up to 4th degree) using np.polyfit method
 
+composite: Creates a composite plot of all Beginner, Intermediate and Advanced levels on separate plots (i.e. 3 graphs)
+all: Similar to composite, but all 100 levels are on one graph
+"""
 if __name__ == "__main__":
-    main("all")
+    main("composite")
