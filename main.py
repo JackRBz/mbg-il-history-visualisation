@@ -40,7 +40,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.isotonic import IsotonicRegression
 from scipy import interpolate
 
-def main():
+def main(plotfunc):
     print("its bare here now!!")
 
     #relative_improvement_testfunc()
@@ -52,12 +52,12 @@ def main():
     level_names = ["Learning to Roll", "Collect the Gems", "Jump Training", "Learn the Super Jump", "Platform Training", "Learn the Super Speed", "Elevator", "Air Movement", "Gyrocopter", "Time Trial", "Super Bounce", "Gravity Helix", "Shock Absorber", "There and Back Again", "Marble Materials Lab", "Bumper Training", "Breezeway", "Mine Field", "Trapdoors!", "Tornado Bowl", "Pitfalls", "Platform Party", "Winding Road", "Grand Finale",
     "Jump Jump Jump", "Monster Speedway Qualifying", "Skate Park", "Ramp Matrix", "Hoops", "Go for the Green", "Fork in the Road", "Tri Twist", "Marbletris", "Space Slide", "Skee Ball Bonus", "Marble Playground", "Hop Skip and a Jump", "Take the High Road", "Half-Pipe", "Gauntlet", "Moto-Marblecross", "Shock Drop", "Spork in the Road", "Great Divide", "The Wave", "Tornado Alley", "Monster Speedway", "Upward Spiral",
     "Thrill Ride", "Money Tree", "Fan Lift", "Leap of Faith", "Freeway Crossing", "Stepping Stones", "Obstacle Course", "Points of the Compass", "Three-Fold Maze", "Tube Treasure", "Slip 'n Slide", "Skyscraper", "Half Pipe Elite", "A-Maze-ing", "Block Party", "Trapdoor Madness", "Moebius Strip", "Great Divide Revisted", "Escher's Race", "To the Moon", "Around the World in 30 seconds", "Will o' the Wisp", "Twisting the night away", "Survival of the Fittest", 
-    "Plumber's Portal", "Ski Slopes", "Ramps Reloaded", "Tower Maze", "Free Fall", "Acrobat", "Whirl", "Mudslide", "Pipe Dreams", "Scaffold", "Airwalk", "Shimmy", "Path of Least Resistance", "Daedalus", "Ordeal", "Battlements", "Pinball Wizard", "Eye of the Storm", "Dive!", "Tightrope", "Natural Selection", "Tango", "Icarus", "Under Construction", "Pathways", "Darwin's Dilemna", "King of the Mountain"
+    "Plumber's Portal", "Siege", "Ski Slopes", "Ramps Reloaded", "Tower Maze", "Free Fall", "Acrobat", "Whirl", "Mudslide", "Pipe Dreams", "Scaffold", "Airwalk", "Shimmy", "Path of Least Resistance", "Daedalus", "Ordeal", "Battlements", "Pinball Wizard", "Eye of the Storm", "Dive!", "Tightrope", "Natural Selection", "Tango", "Icarus", "Under Construction", "Pathways", "Darwin's Dilemna", "King of the Mountain"
     ]
 
     #CSV reading time
-    for num in range(1,2): #purely for testing purposes
-    #for num in range(1,101): #range func is (inclusive, exclusive)
+    #for num in range(1,2): #purely for testing purposes
+    for num in range(1,101): #range func is (inclusive, exclusive)
         print("---BEGIN CSV TIME FETCHING---")
         with open(f"csvs/{num}.csv", newline='') as csvfile:
             reader = csv.DictReader(csvfile)
@@ -83,38 +83,61 @@ def main():
 
         print("---END RELATIVE IMPROVEMENT CALCULATION---")
         print("---BEGIN CREATING PLOTS---")
+    
         rel_improv = np.array(rel_improv)
         wr_index = np.arange(0, len(rel_improv))
         level_name = level_names[num - 1]
-        plt.scatter(wr_index, rel_improv)
+        if plotfunc != "all":
+            print("plotfunc != all")
+            plt.scatter(wr_index, rel_improv)
 
-        #Let's do some lines/curves of best fit yayayay
-        #polyfit line of best fit
-        a, b = np.polyfit(wr_index, rel_improv, 1)
-        y_linefit = a*wr_index + b
-        plt.plot(wr_index, y_linefit, label="1st deg")
+        if plotfunc == "polyfit":
+            print("plotfunc == polyfit")
+            #Let's do some lines/curves of best fit yayayay
+            #polyfit line of best fit
+            a, b = np.polyfit(wr_index, rel_improv, 1)
+            y_linefit = a*wr_index + b
+            plt.plot(wr_index, y_linefit, label="1st deg")
 
-        #polyfit 2nd degree curve of best fit
-        a, b, c = np.polyfit(wr_index, rel_improv, 2)
-        y_2ndcurve = a*pow(wr_index, 2) + b*wr_index + c
-        plt.plot(wr_index, y_2ndcurve, label="2nd deg")
+            #polyfit 2nd degree curve of best fit
+            a, b, c = np.polyfit(wr_index, rel_improv, 2)
+            y_2ndcurve = a*pow(wr_index, 2) + b*wr_index + c
+            plt.plot(wr_index, y_2ndcurve, label="2nd deg")
 
-        #polyfit 3rd degree curve
-        a, b, c, d = np.polyfit(wr_index, rel_improv, 3)
-        y_3rdcurve = a*pow(wr_index, 3) + b*pow(wr_index, 2) + c*wr_index + d
-        plt.plot(wr_index, y_3rdcurve, label="3rd deg")
+            #polyfit 3rd degree curve
+            a, b, c, d = np.polyfit(wr_index, rel_improv, 3)
+            y_3rdcurve = a*pow(wr_index, 3) + b*pow(wr_index, 2) + c*wr_index + d
+            plt.plot(wr_index, y_3rdcurve, label="3rd deg")
 
-        #polyfit 4th degree curve
-        a, b, c, d, e = np.polyfit(wr_index, rel_improv, 4)
-        y_4thcurve = a*pow(wr_index, 4) + b*pow(wr_index, 3) + c*pow(wr_index, 2) + d*wr_index + e
-        plt.plot(wr_index, y_4thcurve, label="4th deg")
+            #polyfit 4th degree curve
+            a, b, c, d, e = np.polyfit(wr_index, rel_improv, 4)
+            y_4thcurve = a*pow(wr_index, 4) + b*pow(wr_index, 3) + c*pow(wr_index, 2) + d*wr_index + e
+            plt.plot(wr_index, y_4thcurve, label="4th deg")
 
-        plt.legend(title = "Using np.polyfit")
-        plt.xlabel("WR Index")
-        plt.ylabel("Relative Improvement")
-        plt.title(f"WR History of {level_name}")
-        plt.savefig("figs/test.png")
-        plt.show()
+            plt.legend(title = "Using np.polyfit")
+            plt.xlabel("WR Index")
+            plt.ylabel("Relative Improvement")
+            plt.title(f"WR History of {level_name}")
+            plt.savefig(f"figs/{num}_polyfit.png")
+            #plt.savefig("test.png")
+            #plt.show()
+        
+        if plotfunc == "all":
+            print("plotfunc == all")
+            # plt.plot(wr_index, rel_improv, label=level_name)
+            plt.plot(wr_index, rel_improv)
+            #plt.legend(title = "Levels")
+            plt.xlabel("WR Index")
+            plt.ylabel("Relative Improvement")
+            plt.title(f"WR History of All MBG Levels")
+            if num == 100:
+                plt.savefig("figs/All100ILs.png")
+
+        
+        #reset values
+        #plt.clf()
+        times = []
+        rel_improv = []
 
 def relative_improvement_testfunc():
     print("test")
@@ -131,4 +154,4 @@ def relative_improvement_testfunc():
 
 
 if __name__ == "__main__":
-    main()
+    main("all")
