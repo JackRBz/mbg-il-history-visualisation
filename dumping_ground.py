@@ -25,6 +25,19 @@ def main():
     #read_from_multiple_csvs_testfunc()
     matplotlib_styling_testfunc()
 
+def relative_improvement_testfunc():
+    print("test")
+    times = [3.999,3.89,3.266,3.074,3.069,3.049,2.985,2.984,2.402,2.37,2.333,2.287,2.281,2.267,2.25,2.236,2.226]
+    rel_improv = []
+
+    for num in range(0, len(times)):
+        rel_change = (times[0] - times[num])/(times[num])
+        rel_improv.append(rel_change)
+        
+    print(len(times))
+    print(len(rel_improv))
+    print(rel_improv)
+
 def plot_hardcoded_data_testfunc():
     print("This is the plotting testfunc")
     ##Full values (of winding road, B23 in this instance)

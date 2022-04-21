@@ -69,6 +69,7 @@ def main(plotfunc):
 
         for num1 in range(0, len(times)):
             rel_change = (times[0] - times[num1])/(times[num1])
+            rel_change = round(rel_change, 3)
             rel_improv.append(rel_change)
         
         print(rel_improv)
@@ -110,8 +111,45 @@ def main(plotfunc):
             plt.xlabel("WR Index")
             plt.ylabel("Relative Improvement")
             plt.title(f"WR History of {level_name}")
-            plt.savefig(f"figs/{num}_polyfit.png")
+            plt.savefig(f"figs/polyfit/{num}_polyfit.png")
             plt.clf()
+
+        if plotfunc == "sklearn":
+            print("plotfunc == sklearn")
+            #Starting linear regression model
+            wr_index_fix = wr_index.reshape(-1, 1)
+            model = LinearRegression()
+            model.fit(wr_index_fix, rel_improv)
+            lr_best_fit = model.predict(wr_index_fix)
+            print(f'The parameters of the line: {model.coef_}')
+            plt.plot(wr_index, lr_best_fit, label="Linear Regression")
+
+            #Starting Polynomial Features modelling, 2 to 4
+            poly2 = PolynomialFeatures(degree=2, include_bias=False)
+            poly2_features = poly2.fit_transform(wr_index_fix)
+            model.fit(poly2_features, rel_improv) 
+            y2_predict = model.predict(poly2_features)
+            plt.plot(wr_index, y2_predict, label="2nd Degree")
+
+            poly3 = PolynomialFeatures(degree=3, include_bias=False)
+            poly3_features = poly3.fit_transform(wr_index_fix)
+            model.fit(poly3_features, rel_improv)
+            y3_predict = model.predict(poly3_features)
+            plt.plot(wr_index, y3_predict, label="3rd Degree")
+
+            poly4 = PolynomialFeatures(degree=4, include_bias=False)
+            poly4_features = poly4.fit_transform(wr_index_fix)
+            model.fit(poly4_features, rel_improv)
+            y4_predict = model.predict(poly4_features)
+            plt.plot(wr_index, y4_predict, label="4th Degree")
+
+            plt.legend(title = "Using sklearn")
+            plt.xlabel("WR Index")
+            plt.ylabel("Relative Improvement")
+            plt.title(f"WR History of {level_name}")
+            plt.savefig(f"figs/sklearn/{num}_sklearn.png")
+            plt.clf()
+
         
         #For plotting multiple lines at once e.g. all plots for a specific difficulty
         if plotfunc == "composite":
@@ -149,20 +187,6 @@ def main(plotfunc):
         times = []
         rel_improv = []
 
-#old testing function, probably deserves to be thrown into the dumping ground!
-def relative_improvement_testfunc():
-    print("test")
-    times = [3.999,3.89,3.266,3.074,3.069,3.049,2.985,2.984,2.402,2.37,2.333,2.287,2.281,2.267,2.25,2.236,2.226]
-    rel_improv = []
-
-    for num in range(0, len(times)):
-        rel_change = (times[0] - times[num])/(times[num])
-        rel_improv.append(rel_change)
-        
-    print(len(times))
-    print(len(rel_improv))
-    print(rel_improv)
-
 #configure the variables
 """
 Current options:
@@ -172,4 +196,4 @@ composite: Creates a composite plot of all Beginner, Intermediate and Advanced l
 all: Similar to composite, but all 100 levels are on one graph
 """
 if __name__ == "__main__":
-    main("composite")
+    main("all")
